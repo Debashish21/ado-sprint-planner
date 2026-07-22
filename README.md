@@ -2,7 +2,7 @@
 
 A personal Raycast extension for Azure DevOps: see your current-sprint work items, your own done/total progress, and a day-by-day to-do generated from the sprint duration — check items off as you go, with an optional push back to ADO.
 
-<img width="748" height="467" alt="Screenshot 2026-07-22 at 2 01 52 PM" src="https://github.com/user-attachments/assets/8c5320ee-461b-48cf-8827-4b4fcdb136c8" />
+<img width="3426" height="1994" alt="image" src="https://github.com/user-attachments/assets/3f291b9d-f6ae-4b72-846a-9f57a8ab2f89" />
 
 
 ## Commands
