@@ -2,6 +2,8 @@
 
 A personal Raycast extension for Azure DevOps: see your current-sprint work items, your own done/total progress, and a day-by-day to-do generated from the sprint duration — check items off as you go, with an optional push back to ADO.
 
+<img width="749" height="468" alt="Screenshot 2026-07-22 at 2 02 27 PM" src="https://github.com/user-attachments/assets/f46dbc81-07cc-4972-a1b5-b9cf63e3561a" />
+
 ## Commands
 
 - **My Sprint** — your work items in the ongoing iteration, grouped into "In Progress / To Do" and "Done" **by your local status**, with your personal `done/total` in the title. Each row shows a muted ADO-state tag and a color-coded local-status tag. Land on a row and press **`Tab`** to set status; other actions: open in ADO, copy, mark done in ADO (⌘⇧P).
