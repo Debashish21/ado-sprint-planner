@@ -1,7 +1,5 @@
 import { LocalStorage } from "@raycast/api";
 import { LocalStatus, ManualTodo, SprintPlan } from "./types";
-// MOCK: demo seeds for screenshots — remove this import (and the guards below) before publishing.
-import { MOCK_DEFERRED, MOCK_MODE, MOCK_NOTES, MOCK_STATUS } from "./mock";
 
 const PLAN_KEY = "sprint-plan";
 const STATUS_KEY = "local-status"; // Record<number, LocalStatus>, personal workflow status
@@ -35,9 +33,7 @@ export async function pinToToday(id: number): Promise<void> {
 
 export async function getStatusMap(): Promise<Map<number, LocalStatus>> {
   const raw = await LocalStorage.getItem<string>(STATUS_KEY);
-  const stored = raw ? (JSON.parse(raw) as Record<number, LocalStatus>) : {};
-  // MOCK: seed defaults for screenshots; anything stored (live Tab edits) wins.
-  const record = MOCK_MODE ? { ...MOCK_STATUS, ...stored } : stored;
+  const record = raw ? (JSON.parse(raw) as Record<number, LocalStatus>) : {};
   const map = new Map<number, LocalStatus>();
   for (const [id, status] of Object.entries(record)) {
     map.set(Number(id), status);
@@ -63,8 +59,6 @@ export async function setStatus(
 
 export async function getDeferredSet(): Promise<Set<number>> {
   const raw = await LocalStorage.getItem<string>(DEFERRED_KEY);
-  // MOCK: seed a deferred item for the screenshot until you defer something live.
-  if (!raw && MOCK_MODE) return new Set<number>(MOCK_DEFERRED);
   return new Set<number>(raw ? (JSON.parse(raw) as number[]) : []);
 }
 
@@ -83,8 +77,6 @@ export async function setDeferred(
 
 export async function getManualTodos(): Promise<ManualTodo[]> {
   const raw = await LocalStorage.getItem<string>(NOTES_KEY);
-  // MOCK: seed demo notes for the screenshot until you add one live.
-  if (!raw && MOCK_MODE) return MOCK_NOTES;
   return raw ? (JSON.parse(raw) as ManualTodo[]) : [];
 }
 
