@@ -1,4 +1,4 @@
-# ADO Sprint Planner (Raycast)
+# Azure DevOps Sprint Planner (Raycast)
 
 A Raycast extension for Azure DevOps: see your current-sprint work items, your own done/total progress, and a day-by-day to-do generated from the sprint duration — check items off as you go, with an optional push back to ADO.
 

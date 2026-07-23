@@ -1,4 +1,4 @@
-# ADO Sprint Planner Changelog
+# Azure DevOps Sprint Planner Changelog
 
 ## [Initial Release] - {PR_MERGE_DATE}
 
