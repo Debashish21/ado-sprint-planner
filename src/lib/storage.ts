@@ -1,9 +1,12 @@
 import { LocalStorage } from "@raycast/api";
-import { LocalStatus, SprintPlan } from "./types";
+import { LocalStatus, ManualTodo, SprintPlan } from "./types";
+// MOCK: demo seeds for screenshots — remove this import (and the guards below) before publishing.
+import { MOCK_DEFERRED, MOCK_MODE, MOCK_NOTES, MOCK_STATUS } from "./mock";
 
 const PLAN_KEY = "sprint-plan";
 const STATUS_KEY = "local-status"; // Record<number, LocalStatus>, personal workflow status
 const DEFERRED_KEY = "local-deferred"; // number[] of shelved work-item ids
+const NOTES_KEY = "manual-todos"; // ManualTodo[], ad-hoc notes shown atop Today
 
 export async function getPlan(): Promise<SprintPlan | undefined> {
   const raw = await LocalStorage.getItem<string>(PLAN_KEY);
@@ -32,7 +35,9 @@ export async function pinToToday(id: number): Promise<void> {
 
 export async function getStatusMap(): Promise<Map<number, LocalStatus>> {
   const raw = await LocalStorage.getItem<string>(STATUS_KEY);
-  const record = raw ? (JSON.parse(raw) as Record<number, LocalStatus>) : {};
+  const stored = raw ? (JSON.parse(raw) as Record<number, LocalStatus>) : {};
+  // MOCK: seed defaults for screenshots; anything stored (live Tab edits) wins.
+  const record = MOCK_MODE ? { ...MOCK_STATUS, ...stored } : stored;
   const map = new Map<number, LocalStatus>();
   for (const [id, status] of Object.entries(record)) {
     map.set(Number(id), status);
@@ -58,6 +63,8 @@ export async function setStatus(
 
 export async function getDeferredSet(): Promise<Set<number>> {
   const raw = await LocalStorage.getItem<string>(DEFERRED_KEY);
+  // MOCK: seed a deferred item for the screenshot until you defer something live.
+  if (!raw && MOCK_MODE) return new Set<number>(MOCK_DEFERRED);
   return new Set<number>(raw ? (JSON.parse(raw) as number[]) : []);
 }
 
@@ -70,4 +77,87 @@ export async function setDeferred(
   else set.delete(id);
   await LocalStorage.setItem(DEFERRED_KEY, JSON.stringify([...set]));
   return set;
+}
+
+// --- Manual (ad-hoc) to-dos shown atop Today ---
+
+export async function getManualTodos(): Promise<ManualTodo[]> {
+  const raw = await LocalStorage.getItem<string>(NOTES_KEY);
+  // MOCK: seed demo notes for the screenshot until you add one live.
+  if (!raw && MOCK_MODE) return MOCK_NOTES;
+  return raw ? (JSON.parse(raw) as ManualTodo[]) : [];
+}
+
+/**
+ * Split raw box text into one or more notes. A "/" that begins a new point —
+ * at the very start or right after whitespace/newline — starts a new note; a
+ * "/" inside a word or URL (and/or, http://) is left intact. So
+ * "-a\n-b\n/c" -> ["-a\n-b", "c"], while "-a -b -c" stays a single note.
+ */
+export function splitNoteText(input: string): string[] {
+  return input
+    .split(/(?:^|\s)\/(?=\S)/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+/**
+ * Add one or more notes from the box (see splitNoteText). Newest lands on top;
+ * within a batch, typed order is preserved (first point ends up highest).
+ * Blank text is ignored.
+ */
+export async function addManualTodo(text: string): Promise<ManualTodo[]> {
+  const parts = splitNoteText(text);
+  if (parts.length === 0) return getManualTodos();
+  const stamp = Date.now();
+  const fresh: ManualTodo[] = parts.map((t, i) => ({
+    id: `n-${stamp}-${i}-${Math.random().toString(36).slice(2, 7)}`,
+    text: t,
+    createdAt: new Date().toISOString(),
+  }));
+  const notes = await getManualTodos();
+  const next = [...fresh, ...notes];
+  await LocalStorage.setItem(NOTES_KEY, JSON.stringify(next));
+  return next;
+}
+
+/** Re-add a completed note verbatim (preserves id + createdAt) — powers Undo. */
+export async function restoreManualTodo(note: ManualTodo): Promise<void> {
+  const notes = await getManualTodos();
+  if (notes.some((n) => n.id === note.id)) return;
+  await LocalStorage.setItem(NOTES_KEY, JSON.stringify([note, ...notes]));
+}
+
+/**
+ * Set a note's local status. "done" removes it (notes disappear once done —
+ * the caller can offer Undo via restoreManualTodo); other statuses update the
+ * note in place, keeping its id, position, and createdAt.
+ */
+export async function setManualTodoStatus(
+  id: string,
+  status: LocalStatus,
+): Promise<ManualTodo[]> {
+  const notes = await getManualTodos();
+  const next =
+    status === "done"
+      ? notes.filter((n) => n.id !== id)
+      : notes.map((n) => (n.id === id ? { ...n, status } : n));
+  await LocalStorage.setItem(NOTES_KEY, JSON.stringify(next));
+  return next;
+}
+
+/**
+ * Edit a note's text in place, keeping its id, position, and createdAt (so its
+ * "carried Nd" age is preserved). Blank text is ignored.
+ */
+export async function updateManualTodo(
+  id: string,
+  text: string,
+): Promise<ManualTodo[]> {
+  const trimmed = text.trim();
+  if (!trimmed) return getManualTodos();
+  const notes = await getManualTodos();
+  const next = notes.map((n) => (n.id === id ? { ...n, text: trimmed } : n));
+  await LocalStorage.setItem(NOTES_KEY, JSON.stringify(next));
+  return next;
 }
