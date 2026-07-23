@@ -155,7 +155,10 @@ export function projectPlan(
   const capacityTotal = cap * days.length;
   const fits = load <= capacityTotal;
   // Even, sustainable pace when it fits; hard cap when it doesn't.
-  const perDayTarget = Math.min(cap, Math.max(1, Math.ceil(load / days.length)));
+  const perDayTarget = Math.min(
+    cap,
+    Math.max(1, Math.ceil(load / days.length)),
+  );
 
   const perDay: DayBucket[] = days.map((day) => ({ day, items: [] }));
   const overflow: WorkItem[] = [];

@@ -86,7 +86,10 @@ async function fetchOpenStatesFromAdo(extra: Set<string>): Promise<string[]> {
         value: Array<{ name: string; category: string }>;
       }>(url);
       for (const s of data.value ?? []) {
-        if (OPEN_CATEGORIES.has(s.category) || extra.has(s.name.toLowerCase())) {
+        if (
+          OPEN_CATEGORIES.has(s.category) ||
+          extra.has(s.name.toLowerCase())
+        ) {
           names.add(s.name);
         }
       }

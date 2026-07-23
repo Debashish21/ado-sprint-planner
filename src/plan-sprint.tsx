@@ -178,7 +178,7 @@ export default function PlanSprint() {
               onChange={revalidateLocal}
             />
             <Action
-              title="Do Next (bump to Front)"
+              title="Do Next (Bump to Front)"
               icon={Icon.ArrowUp}
               shortcut={{ modifiers: ["cmd"], key: "t" }}
               onAction={() => bumpToFront(item)}
@@ -190,19 +190,19 @@ export default function PlanSprint() {
               onAction={() => defer(item)}
             />
             <Action
-              title="Re-plan (smart)"
+              title="Re-Plan (Smart)"
               icon={Icon.ArrowClockwise}
               shortcut={{ modifiers: ["cmd"], key: "r" }}
               onAction={replanSmart}
             />
             <Action
-              title="Re-plan with AI"
+              title="Re-Plan with AI"
               icon={Icon.Stars}
               shortcut={{ modifiers: ["cmd", "shift"], key: "r" }}
               onAction={replanAI}
             />
             <Action
-              title="Refresh from Ado"
+              title="Refresh from ADO"
               icon={Icon.ArrowClockwise}
               onAction={revalidate}
             />
@@ -231,7 +231,11 @@ export default function PlanSprint() {
         return (
           <List.Section
             key={bucket.day}
-            title={i === 0 ? `Today · ${prettyDay(bucket.day)}` : prettyDay(bucket.day)}
+            title={
+              i === 0
+                ? `Today · ${prettyDay(bucket.day)}`
+                : prettyDay(bucket.day)
+            }
             subtitle={`${bucket.items.length} item(s)`}
           >
             {bucket.items.map(row)}

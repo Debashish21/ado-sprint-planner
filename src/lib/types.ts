@@ -37,6 +37,16 @@ export interface Iteration {
   finishDate?: string; // ISO
 }
 
+// A local-only ad-hoc to-do jotted in Today's To-Do (e.g. meeting feedback).
+// Purely a display overlay — never enters the sprint plan/projection/capacity.
+// Carries forward until completed (completing removes it).
+export interface ManualTodo {
+  id: string; // local unique id (not an ADO work item)
+  text: string;
+  createdAt: string; // ISO — drives the "carried Nd" badge
+  status?: LocalStatus; // same 3-stage local status as work items; "done" removes it
+}
+
 // The persisted plan: an ordered queue of work-item ids. Days are projected
 // live (see projectPlan) from this order + remaining working days + capacity,
 // so unfinished work rolls forward instead of stranding on a fixed date.
