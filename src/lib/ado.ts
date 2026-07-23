@@ -1,5 +1,13 @@
 import { getPreferenceValues, LocalStorage } from "@raycast/api";
 import { Preferences, WorkItem, Iteration } from "./types";
+// MOCK: demo data for screenshots — remove this import (and the guards below) before publishing.
+import {
+  MOCK_MODE,
+  mockIteration,
+  mockPlannerItems,
+  mockSprintItems,
+  mockTickets,
+} from "./mock";
 
 const API = "api-version=7.1";
 const WORK_ITEM_TYPES = "'User Story', 'Bug', 'Task'";
@@ -86,7 +94,10 @@ async function fetchOpenStatesFromAdo(extra: Set<string>): Promise<string[]> {
         value: Array<{ name: string; category: string }>;
       }>(url);
       for (const s of data.value ?? []) {
-        if (OPEN_CATEGORIES.has(s.category) || extra.has(s.name.toLowerCase())) {
+        if (
+          OPEN_CATEGORIES.has(s.category) ||
+          extra.has(s.name.toLowerCase())
+        ) {
           names.add(s.name);
         }
       }
@@ -169,6 +180,7 @@ function configuredTeams(): string[] {
 
 /** A given team's current iteration (defines "this sprint" for that team). */
 export async function getCurrentIteration(team?: string): Promise<Iteration> {
+  if (MOCK_MODE) return mockIteration(); // MOCK
   const t = (team ?? prefs().team ?? "").trim();
   if (!t) throw new Error("Set a Team in preferences to plan a sprint.");
   const url = `${teamContextUrl(t)}/_apis/work/teamsettings/iterations?$timeframe=current&${API}`;
@@ -281,6 +293,7 @@ async function getWorkItemsOrdered(ids: number[]): Promise<WorkItem[]> {
  * team it came from so callers can segregate a multi-team result.
  */
 export async function getMySprintItems(): Promise<WorkItem[]> {
+  if (MOCK_MODE) return mockSprintItems(); // MOCK
   const teams = configuredTeams();
   if (teams.length === 0)
     throw new Error("Set Team or Additional Teams in preferences.");
@@ -296,6 +309,7 @@ export async function getMySprintItems(): Promise<WorkItem[]> {
 
 /** Every open work item assigned to me across the whole project, regardless of sprint/team. */
 export async function getMyTickets(): Promise<WorkItem[]> {
+  if (MOCK_MODE) return mockTickets(); // MOCK
   const ids = await getMyProjectWideIds();
   return getWorkItemsOrdered(ids);
 }
@@ -308,6 +322,7 @@ export async function getMyTickets(): Promise<WorkItem[]> {
 export async function getPlannerItems(
   includeBacklog: boolean,
 ): Promise<WorkItem[]> {
+  if (MOCK_MODE) return mockPlannerItems(includeBacklog); // MOCK
   if (!includeBacklog) {
     const sprint = await getMySprintItems();
     return sprint.map((i) => ({ ...i, inSprint: true }));
@@ -323,6 +338,7 @@ export async function getPlannerItems(
 
 /** Optional: move a work item to the configured "done" state. Requires a write-scoped PAT. */
 export async function setWorkItemDone(id: number): Promise<void> {
+  if (MOCK_MODE) return; // MOCK: no-op so demo pushes don't hit ADO
   const { doneState } = prefs();
   const url = `${baseUrl()}/_apis/wit/workitems/${id}?${API}`;
   await adoFetch(url, {
