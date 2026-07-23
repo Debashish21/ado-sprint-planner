@@ -1,3 +1,4 @@
+/* eslint-disable @raycast/prefer-title-case -- action titles intentionally keep acronyms/product terms uppercase (ID, ADO, AI) */
 import {
   Action,
   ActionPanel,
