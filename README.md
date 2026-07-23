@@ -1,12 +1,12 @@
 # ADO Sprint Planner (Raycast)
 
-A personal Raycast extension for Azure DevOps: see your current-sprint work items, your own done/total progress, and a day-by-day to-do generated from the sprint duration — check items off as you go, with an optional push back to ADO.
+A Raycast extension for Azure DevOps: see your current-sprint work items, your own done/total progress, and a day-by-day to-do generated from the sprint duration — check items off as you go, with an optional push back to ADO.
 
 ## Commands
 
 - **My Sprint** — your work items in the ongoing iteration, grouped into "In Progress / To Do" and "Done" **by your local status**, with your personal `done/total` in the title. Each row shows a muted ADO-state tag and a color-coded local-status tag. Land on a row and press **`Tab`** to set status; other actions: open in ADO, copy, mark done in ADO (⌘⇧P).
 - **My Tickets** — every **open** work item assigned to you across the whole project, regardless of sprint or team, grouped by iteration path, with a **Deferred** section at the bottom. Press `Tab` to set status, **⌘D** to defer / un-defer. Closed/resolved/completed items are filtered out.
-- **Plan Sprint** — sequences your open work into a rolling queue and projects it across the sprint's remaining working days (`Daily Capacity` items/day). By default it plans your **current sprint _plus_ your other open assigned tickets** (backlog, tagged **Backlog** and ranked behind sprint work) so nothing outside the sprint rots — toggle **Include Backlog** off for sprint-only. Shows a **fit summary** (does it all fit, with how much buffer) and an **"At risk of spillover"** section for anything that won't — with one-tap **Defer**. Actions: **Save Plan**, **Do Next** (bump to front), **Re-plan (Smart)**, **Re-plan with AI**, Defer. Nothing is dumped onto the last day.
+- **Plan Sprint** — sequences your open work into a rolling queue and projects it across the sprint's remaining working days (`Daily Capacity` items/day). By default it plans your **current sprint _plus_ your other open assigned tickets** (backlog, tagged **Backlog** and ranked behind sprint work) so nothing outside the sprint rots — toggle **Include Backlog** off for sprint-only. Shows a **fit summary** (does it all fit, with how much buffer) and an **"At risk of spillover"** section for anything that won't — with one-tap **Defer**. Actions: **Save Plan**, **Do Next** (bump to front), **Re-Plan (Smart)**, **Re-Plan with AI**, Defer. Nothing is dumped onto the last day.
 - **Today's To-Do** — the first day's slice of the projection. Because the plan is a rolling queue (not fixed dates), **unfinished work automatically rolls into today** — you never strand items on a past date. Set status with **`Tab`** (⏎ opens it in ADO), or **Also Push to ADO** (⌘⇧P).
 - **Sprint Glance** — a menu-bar item showing how many items are left today; click any to open it, or jump into the Today / My Sprint views.
 
@@ -33,7 +33,7 @@ Every item carries a personal 3-stage **local status** (Not Started → In Progr
    npm install
    npm run dev      # ray develop — hot-reloads while you build
    ```
-4. **Fill preferences** on first run: PAT, organization (e.g. `contoso`), project, team, done state, daily capacity.
+3. **Fill preferences** on first run: PAT, organization (e.g. `contoso`), project, team, done state, daily capacity.
 
 ## Config notes
 

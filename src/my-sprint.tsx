@@ -56,7 +56,7 @@ export default function MySprint() {
               onChange={revalidateLocal}
               allowMoveToToday
             />
-            <Action.CopyToClipboard title="Copy Id" content={`#${item.id}`} />
+            <Action.CopyToClipboard title="Copy ID" content={`#${item.id}`} />
             <Action.CopyToClipboard title="Copy Title" content={item.title} />
             <Action
               title={`Mark Done in ADO (${doneState})`}

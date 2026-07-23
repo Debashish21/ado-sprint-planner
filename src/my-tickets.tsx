@@ -87,7 +87,7 @@ export default function MyTickets() {
             />
             {isDeferred ? (
               <Action
-                title="Un-defer"
+                title="Un-Defer"
                 icon={Icon.Tray}
                 shortcut={{ modifiers: ["cmd"], key: "d" }}
                 onAction={() => toggleDeferred(item, false)}
@@ -100,7 +100,7 @@ export default function MyTickets() {
                 onAction={() => toggleDeferred(item, true)}
               />
             )}
-            <Action.CopyToClipboard title="Copy Id" content={`#${item.id}`} />
+            <Action.CopyToClipboard title="Copy ID" content={`#${item.id}`} />
             <Action.CopyToClipboard title="Copy Title" content={item.title} />
             {!isDeferred && (
               <Action
